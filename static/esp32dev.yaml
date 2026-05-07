@@ -2,9 +2,11 @@
 substitutions:
   id_prefix: ratgdo32
   friendly_name: "ratgdo32"
+  # Hardware UART2 for DevKit V1
   uart_tx_pin: GPIO17
   uart_rx_pin: GPIO16
   input_obst_pin: GPIO19
+  # Safety "Dummy" pins to satisfy component requirements
   status_door_pin: GPIO26
   status_obstruction_pin: GPIO25
   dry_contact_open_pin: GPIO13
@@ -20,7 +22,7 @@ esphome:
   name_add_mac_suffix: true
   min_version: 2026.4.0
   project:
-    name: ratgdo.esp32dev
+    name: eborchardt.esp32dev_ratgdo
     version: "1.0"
 
 esp32:
@@ -28,8 +30,9 @@ esp32:
   framework:
     type: esp-idf
 
+# This allows the ESPHome dashboard to track updates to this file
 dashboard_import:
-  package_import_url: github://eborchardt/esphome-ratgdo/esp32dev.yaml@main
+  package_import_url: github://eborchardt/esphome-ratgdo/static/esp32dev.yaml@main
 
 packages:
   remote_package:
@@ -37,21 +40,6 @@ packages:
     ref: main
     files: [base.yaml]
     refresh: 1s
-  # remote_package: !include
-  #   file: base.yaml
-
-switch:
-  - platform: ratgdo
-    id: ${id_prefix}_led
-    type: led
-    pin: GPIO2
-    name: "LED"
-    entity_category: config
-
-sensor:
-  - platform: wifi_signal
-    name: "WiFi Signal"
-    update_interval: 120s
 
 # Sync time with Home Assistant.
 time:
@@ -68,8 +56,9 @@ esp32_improv:
 
 wifi:
   ap:
-    ssid: "ratgdo"
+    ssid: "ratgdo32-fallback"
 
 captive_portal:
 
 logger:
+  level: DEBUG
